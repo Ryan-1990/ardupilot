@@ -1,5 +1,13 @@
 /// -*- tab-width: 4; Mode: C++; c-basic-offset: 4; indent-tabs-mode: nil -*-
 
+
+/*
+Development log (by Nan Li):
+12.06.2016  Add ground distance from PX4Flow to Mavlink & Flash Data
+            Add OLED display
+
+*/
+
 /*
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -94,7 +102,7 @@ const AP_Scheduler::Task Copter::scheduler_tasks[] = {
     SCHED_TASK(arm_motors_check,      10,     50),
     SCHED_TASK(auto_disarm_check,     10,     50),
     SCHED_TASK(auto_trim,             10,     75),
-    SCHED_TASK(read_rangefinder,      20,    100),
+    //SCHED_TASK(read_rangefinder,      20,    100),
     SCHED_TASK(update_altitude,       10,    100),
     SCHED_TASK(run_nav_updates,       50,    100),
     SCHED_TASK(update_thr_average,   100,     90),
@@ -432,7 +440,7 @@ void Copter::dataflash_periodic(void)
     DataFlash.periodic_tasks();
 }
 
-// three_hz_loop - 3.3hz loop
+// three_hz_loop - 3hz loop
 void Copter::three_hz_loop()
 {
     // check if we've lost contact with the ground station
@@ -454,6 +462,8 @@ void Copter::three_hz_loop()
 
     // update ch6 in flight tuning
     tuning();
+    // update OLED
+    OLED_Update();
 }
 
 // one_hz_loop - runs at 1Hz
@@ -534,6 +544,16 @@ void Copter::update_GPS(void)
         }
     }
 }
+
+// called at 3hz
+void Copter::OLED_Update(void)
+{
+	char str[25]="Current Distance is:";
+	oled.OLED_P6x8Str(0,0,str,0);
+	sprintf(str,"%.2fm",optflow.ground_distance());
+	oled.OLED_P6x8Str(40,2,str,0);
+}
+
 
 void Copter::init_simple_bearing()
 {
