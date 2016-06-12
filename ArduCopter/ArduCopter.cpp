@@ -548,10 +548,18 @@ void Copter::update_GPS(void)
 // called at 3hz
 void Copter::OLED_Update(void)
 {
-	char str[25]="Current Distance is:";
-	oled.OLED_P6x8Str(0,0,str,0);
+	char str[5];
+
 	sprintf(str,"%.2fm",optflow.ground_distance());
-	oled.OLED_P6x8Str(40,2,str,0);
+	oled.OLED_P6x8Str(0,1,str,0);
+
+	if(!(optflow.flowRate().x<0)) sprintf(str," %.2fm/s",optflow.flowRate().x);
+	else sprintf(str,"%.2fm/s",optflow.flowRate().x);
+	oled.OLED_P6x8Str(0,3,str,0);
+
+	if(!(optflow.flowRate().y<0)) sprintf(str," %.2fm/s",optflow.flowRate().y);
+	else sprintf(str,"%.2fm/s",optflow.flowRate().y);
+	oled.OLED_P6x8Str(0,5,str,0);
 }
 
 

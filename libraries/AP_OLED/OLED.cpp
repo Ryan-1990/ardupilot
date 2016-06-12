@@ -405,42 +405,6 @@ void OLED::Set_NOP(void)
 }
 
 
-void OLED::OLED_Init(void)
-{
-  //OLED Pins
-  hal.gpio->pinMode(50, HAL_GPIO_OUTPUT);
-  hal.gpio->pinMode(51, HAL_GPIO_OUTPUT);
-  hal.gpio->pinMode(52, HAL_GPIO_OUTPUT);
-  hal.gpio->pinMode(53, HAL_GPIO_OUTPUT);
-  
-  hal.gpio->write(53, 1);
-  
-  hal.gpio->write(51, 0);
-  DLY_ms(50);
-  hal.gpio->write(51, 1);
-	
-	//从上电到下面开始初始化要有足够的时间，即等待RC复位完毕
-  Set_Display_On_Off(0x00);		  // Display Off (0x00/0x01)
-  Set_Display_Clock(0x80);		  // Set Clock as 100 Frames/Sec
-  Set_Multiplex_Ratio(0x3F);		// 1/64 Duty (0x0F~0x3F)
-  Set_Display_Offset(0x00);		  // Shift Mapping RAM Counter (0x00~0x3F)
-  SetStartLine(0x00);			      // Set Mapping RAM Display Start Line (0x00~0x3F)
-  Set_Charge_Pump(0x04);		    // Enable Embedded DC/DC Converter (0x00/0x04)
-  SetAddressingMode(0x02);		  // Set Page Addressing Mode (0x00/0x01/0x02)
-  Set_Segment_Remap(0x01);		  // Set SEG/Column Mapping     0x00左右反置 0x01正常
-  Set_Common_Remap(0x08);			  // Set COM/Row Scan Direction 0x00上下反置 0x08正常
-  Set_Common_Config(0x10);		  // Set Sequential Configuration (0x00/0x10)
-  SetContrastControl(Brightness);	// Set SEG Output Current
-  Set_Precharge_Period(0xF1);		// Set Pre-Charge as 15 Clocks & Discharge as 1 Clock
-  Set_VCOMH(0x40);			        // Set VCOM Deselect Level
-  Set_Entire_Display(0x00);		  // Disable Entire Display On (0x00/0x01)
-  Set_Inverse_Display(0x00);		// Disable Inverse Display On (0x00/0x01)  
-  Set_Display_On_Off(0x01);		  // Display On (0x00/0x01)
-  OLED_Clear();  //初始清屏
-	OLED_Set_Pos(0,0); 
-} 
-
-
 //==============================================================
 //函数名：OLED_P6x8Str(unsigned char x,unsigned char y,unsigned char *p,unsigned char ConverseSelect)
 //功能描述：写入一组标准ASCII字符串
@@ -514,4 +478,46 @@ void OLED::OLED_clear_line(unsigned int line)
 	OLED_WrCmd(0x10);
   for(x=0;x<X_WIDTH;x++)
 			OLED_WrDat(0x00);
+}
+
+void OLED::OLED_Init(void)
+{
+  //OLED Pins
+  hal.gpio->pinMode(50, HAL_GPIO_OUTPUT);
+  hal.gpio->pinMode(51, HAL_GPIO_OUTPUT);
+  hal.gpio->pinMode(52, HAL_GPIO_OUTPUT);
+  hal.gpio->pinMode(53, HAL_GPIO_OUTPUT);
+
+  hal.gpio->write(53, 1);
+
+  hal.gpio->write(51, 0);
+  DLY_ms(50);
+  hal.gpio->write(51, 1);
+
+	//从上电到下面开始初始化要有足够的时间，即等待RC复位完毕
+  Set_Display_On_Off(0x00);		  // Display Off (0x00/0x01)
+  Set_Display_Clock(0x80);		  // Set Clock as 100 Frames/Sec
+  Set_Multiplex_Ratio(0x3F);		// 1/64 Duty (0x0F~0x3F)
+  Set_Display_Offset(0x00);		  // Shift Mapping RAM Counter (0x00~0x3F)
+  SetStartLine(0x00);			      // Set Mapping RAM Display Start Line (0x00~0x3F)
+  Set_Charge_Pump(0x04);		    // Enable Embedded DC/DC Converter (0x00/0x04)
+  SetAddressingMode(0x02);		  // Set Page Addressing Mode (0x00/0x01/0x02)
+  Set_Segment_Remap(0x01);		  // Set SEG/Column Mapping     0x00左右反置 0x01正常
+  Set_Common_Remap(0x08);			  // Set COM/Row Scan Direction 0x00上下反置 0x08正常
+  Set_Common_Config(0x10);		  // Set Sequential Configuration (0x00/0x10)
+  SetContrastControl(Brightness);	// Set SEG Output Current
+  Set_Precharge_Period(0xF1);		// Set Pre-Charge as 15 Clocks & Discharge as 1 Clock
+  Set_VCOMH(0x40);			        // Set VCOM Deselect Level
+  Set_Entire_Display(0x00);		  // Disable Entire Display On (0x00/0x01)
+  Set_Inverse_Display(0x00);		// Disable Inverse Display On (0x00/0x01)
+  Set_Display_On_Off(0x01);		  // Display On (0x00/0x01)
+  OLED_Clear();  //初始清屏
+  OLED_Set_Pos(0,0);
+
+  char str1[15]="Distance is:";
+  OLED_P6x8Str(0,0,str1,0);
+  char str2[15]="flow_x is:";
+  OLED_P6x8Str(0,2,str2,0);
+  char str3[15]="flow_y is:";
+  OLED_P6x8Str(0,4,str3,0);
 }
