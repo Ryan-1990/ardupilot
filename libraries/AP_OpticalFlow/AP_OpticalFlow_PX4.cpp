@@ -45,6 +45,7 @@ void AP_OpticalFlow_PX4::init(void)
 
     // check for failure to open device
     if (_fd == -1) {
+    	hal.console->printf("fail to open PX4Flow");
         return;
     }
 
@@ -68,6 +69,8 @@ void AP_OpticalFlow_PX4::update(void)
         struct OpticalFlow::OpticalFlow_state state;
         state.device_id = report.sensor_id;
         state.surface_quality = report.quality;
+        state.ground_distance = report.ground_distance_m;
+
         if (report.integration_timespan > 0) {
             float yawAngleRad = _yawAngleRad();
             float cosYaw = cosf(yawAngleRad);
@@ -81,6 +84,7 @@ void AP_OpticalFlow_PX4::update(void)
             state.flowRate.y = flowScaleFactorY * integralToRate * (sinYaw * float(report.pixel_flow_x_integral) + cosYaw * float(report.pixel_flow_y_integral)); // rad/sec measured optically about the Y body axis
             state.bodyRate.x = integralToRate * (cosYaw * float(report.gyro_x_rate_integral) - sinYaw * float(report.gyro_y_rate_integral)); // rad/sec measured inertially about the X body axis
             state.bodyRate.y = integralToRate * (sinYaw * float(report.gyro_x_rate_integral) + cosYaw * float(report.gyro_y_rate_integral)); // rad/sec measured inertially about the Y body axis
+
         } else {
             state.flowRate.zero();
             state.bodyRate.zero();

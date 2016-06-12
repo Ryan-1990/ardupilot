@@ -226,6 +226,7 @@ struct PACKED log_Optflow {
     LOG_PACKET_HEADER;
     uint64_t time_us;
     uint8_t surface_quality;
+    float ground_distance;
     float flow_x;
     float flow_y;
     float body_x;
@@ -246,6 +247,7 @@ void Copter::Log_Write_Optflow()
         LOG_PACKET_HEADER_INIT(LOG_OPTFLOW_MSG),
         time_us         : AP_HAL::micros64(),
         surface_quality : optflow.quality(),
+        ground_distance : optflow.ground_distance(),
         flow_x          : flowRate.x,
         flow_y          : flowRate.y,
         body_x          : bodyRate.x,
@@ -723,7 +725,7 @@ const struct LogStructure Copter::log_structure[] = {
     { LOG_PARAMTUNE_MSG, sizeof(log_ParameterTuning),
       "PTUN", "QBfHHH",          "TimeUS,Param,TunVal,CtrlIn,TunLo,TunHi" },  
     { LOG_OPTFLOW_MSG, sizeof(log_Optflow),       
-      "OF",   "QBffff",   "TimeUS,Qual,flowX,flowY,bodyX,bodyY" },
+      "OF",   "QBfffff",   "TimeUS,Qual,Dist,flowX,flowY,bodyX,bodyY" },
     { LOG_NAV_TUNING_MSG, sizeof(log_Nav_Tuning),       
       "NTUN", "Qffffffffff", "TimeUS,DPosX,DPosY,PosX,PosY,DVelX,DVelY,VelX,VelY,DAccX,DAccY" },
     { LOG_CONTROL_TUNING_MSG, sizeof(log_Control_Tuning),

@@ -1473,7 +1473,8 @@ void GCS_MAVLINK::send_opticalflow(AP_AHRS_NavEKF &ahrs, const OpticalFlow &optf
         bodyRate.x,
         bodyRate.y,
         optflow.quality(),
-        hagl); // ground distance (in meters) set to zero
+        //hagl); // ground distance (in meters) set to zero
+        optflow.ground_distance()); // ground distance (in meters)
 }
 #endif
 

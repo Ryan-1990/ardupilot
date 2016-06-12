@@ -95,6 +95,9 @@ void Copter::init_ardupilot()
     // initialise serial port
     serial_manager.init_console();
 
+    // initialise OLED
+    oled.OLED_Init();
+
     // init vehicle capabilties
     init_capabilities();
 

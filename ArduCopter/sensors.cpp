@@ -138,8 +138,15 @@ void Copter::update_optical_flow(void)
     if (optflow.last_update() != last_of_update) {
         last_of_update = optflow.last_update();
         uint8_t flowQuality = optflow.quality();
+        float_t ground_distance = optflow.ground_distance();
         Vector2f flowRate = optflow.flowRate();
         Vector2f bodyRate = optflow.bodyRate();
+/*
+        hal.console->printf("flowRateX:%.2f\n",flowRate.x);
+        hal.console->printf("flowRateY:%.2f\n",flowRate.y);
+        hal.console->printf("bodyRateX:%.2f\n",bodyRate.x);
+        hal.console->printf("bodyRateY:%.2f\n",bodyRate.y);
+*/
         ahrs.writeOptFlowMeas(flowQuality, flowRate, bodyRate, last_of_update);
         if (g.log_bitmask & MASK_LOG_OPTFLOW) {
             Log_Write_Optflow();

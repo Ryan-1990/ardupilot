@@ -88,6 +88,7 @@
 #include <AP_RPM/AP_RPM.h>
 #include <AC_InputManager/AC_InputManager.h>        // Pilot input handling library
 #include <AC_InputManager/AC_InputManager_Heli.h>   // Heli specific pilot input handling library
+#include <AP_OLED/OLED.h>   //OLED library (by Nan Li)
 
 // Configuration
 #include "defines.h"
@@ -197,6 +198,7 @@ private:
 #if OPTFLOW == ENABLED
     OpticalFlow optflow{ahrs};
 #endif
+    OLED oled;
 
     // gnd speed limit required to observe optical flow sensor limits
     float ekfGndSpdLimit;
@@ -906,6 +908,7 @@ private:
     void auto_disarm_check();
     bool init_arm_motors(bool arming_from_gcs);
     void update_arming_checks(void);
+    void OLED_Update(void);
     bool all_arming_checks_passing(bool arming_from_gcs);
     bool pre_arm_checks(bool display_failure);
     void pre_arm_rc_checks();

@@ -48,6 +48,9 @@ public:
     // quality - returns the surface quality as a measure from 0 ~ 255
     uint8_t quality() const { return _state.surface_quality; }
 
+    // ground distance - returns the distance from ground as a measure from 0 ~ 5000 (mm)
+    float_t ground_distance() const { return _state.ground_distance; }
+
     // raw - returns the raw movement from the sensor
     const Vector2f& flowRate() const { return _state.flowRate; }
 
@@ -66,6 +69,7 @@ public:
     struct OpticalFlow_state {
         uint8_t device_id;          // device id
         uint8_t  surface_quality;   // image quality (below TBD you can't trust the dx,dy values returned)
+        float_t ground_distance;    // ground distance
         Vector2f flowRate;          // optical flow angular rate in rad/sec measured about the X and Y body axis. A RH rotation about a sensor axis produces a positive rate.
         Vector2f bodyRate;          // body inertial angular rate in rad/sec measured about the X and Y body axis. A RH rotation about a sensor axis produces a positive rate.
     };
